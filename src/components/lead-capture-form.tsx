@@ -3,6 +3,7 @@
 import { FormEvent, useMemo, useState } from "react";
 import { FunnelGoal, FunnelRecommendation } from "@/lib/funnel";
 import { getWhatsAppLink, funnelLeadMessage } from "@/lib/whatsapp";
+import { trackEvent } from "@/lib/analytics";
 
 type LeadCaptureFormProps = {
   goal: FunnelGoal;
@@ -27,6 +28,7 @@ export function LeadCaptureForm({ goal, recommendation }: LeadCaptureFormProps) 
         backupRoute: recommendation.backupRoute.title,
         risk: recommendation.risk,
         durationHint: recommendation.primaryRoute.durationHint,
+        riskIfDelayed: recommendation.riskIfDelayed,
       }),
     );
   }, [submitted, name, phone, goal, recommendation]);
@@ -35,6 +37,12 @@ export function LeadCaptureForm({ goal, recommendation }: LeadCaptureFormProps) 
     event.preventDefault();
     if (!name.trim() || !phone.trim() || !consent) return;
     setSubmitted(true);
+    trackEvent("lead_form_submitted", {
+      goal,
+      level: recommendation.level,
+      primaryRoute: recommendation.primaryRoute.id,
+      backupRoute: recommendation.backupRoute.id,
+    });
   }
 
   return (
@@ -43,6 +51,7 @@ export function LeadCaptureForm({ goal, recommendation }: LeadCaptureFormProps) 
       <p className="mt-1 text-sm text-slate-600">
         Оставьте контакт, чтобы менеджер сразу видел ваш уровень, риски и рекомендуемый маршрут.
       </p>
+      <p className="mt-1 text-xs font-semibold text-amber-700">Ваш персональный слот по этому плану активен сегодня до 21:00.</p>
 
       <form className="mt-4 grid gap-3 sm:grid-cols-2" onSubmit={handleSubmit}>
         <label className="grid gap-1 text-sm font-medium text-slate-700">
@@ -79,13 +88,20 @@ export function LeadCaptureForm({ goal, recommendation }: LeadCaptureFormProps) 
             type="submit"
             className="sm:col-span-2 inline-flex h-11 items-center justify-center rounded-md bg-[#102a56] px-5 text-sm font-semibold text-white transition hover:bg-[#173870]"
           >
-            Подготовить заявку
+            Закрепить персональный слот
           </button>
         ) : (
           <a
             href={waHref}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() =>
+              trackEvent("whatsapp_handoff_clicked", {
+                goal,
+                level: recommendation.level,
+                primaryRoute: recommendation.primaryRoute.id,
+              })
+            }
             className="sm:col-span-2 inline-flex h-11 items-center justify-center rounded-md bg-[#102a56] px-5 text-sm font-semibold text-white transition hover:bg-[#173870]"
           >
             Открыть WhatsApp с заявкой

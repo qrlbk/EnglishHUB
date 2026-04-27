@@ -1,3 +1,7 @@
+"use client";
+
+import { trackEvent } from "@/lib/analytics";
+
 export function FinalCta() {
   return (
     <section className="bg-gradient-to-r from-[#0a1628] to-[#1e3a5f] py-[clamp(2.2rem,5.2vw,3.5rem)]" aria-label="Итоговый призыв">
@@ -7,10 +11,14 @@ export function FinalCta() {
           <p className="mt-2 text-sm leading-relaxed text-slate-200 sm:text-base">
             Вы получите понятный маршрут: цель, уровень, курс и персональную заявку в WhatsApp.
           </p>
+          <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-amber-200">
+            Сегодня доступно 2 персональных слота до 21:00
+          </p>
         </div>
         <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
           <a
             href="#funnel"
+            onClick={() => trackEvent("offer_accept_clicked", { source: "final_cta" })}
             className="inline-flex min-h-12 items-center justify-center rounded-md bg-white px-6 py-3 text-sm font-extrabold text-[#0a1628] transition hover:bg-slate-100"
           >
             Пройти тест и подобрать курс

@@ -43,6 +43,7 @@ type FunnelLeadPayload = {
   backupRoute: string;
   risk: string;
   durationHint: string;
+  riskIfDelayed: string;
 };
 
 export function funnelLeadMessage(payload: FunnelLeadPayload): string {
@@ -56,6 +57,7 @@ export function funnelLeadMessage(payload: FunnelLeadPayload): string {
     `Запасной маршрут: ${payload.backupRoute}`,
     `Ключевой риск: ${payload.risk}`,
     `Рекомендованный срок старта: ${payload.durationHint}`,
+    `Если отложить: ${payload.riskIfDelayed}`,
     "Хочу уточнить расписание и ближайший старт.",
   ].join("\n");
 }

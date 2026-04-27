@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { courses } from "@/data/courses";
 import { SectionHeading } from "@/components/section-heading";
 import { FunnelGoal } from "@/lib/funnel";
+import { trackEvent } from "@/lib/analytics";
 
 type FunnelEventDetail = {
   goal: FunnelGoal;
@@ -23,6 +24,7 @@ function badgeLabel(badge: (typeof courses)[number]["badge"]) {
 export function CoursesGrid() {
   const [goal, setGoal] = useState<FunnelGoal>("speaking");
   const [priorityIds, setPriorityIds] = useState<string[]>([]);
+  const [showAlternatives, setShowAlternatives] = useState(false);
 
   useEffect(() => {
     const handler = (event: Event) => {
@@ -76,40 +78,58 @@ export function CoursesGrid() {
                   <p>Формат: {course.format}</p>
                 </div>
                 <p className="mt-3 text-sm font-bold text-[#0a1628]">{course.price}</p>
+                <a
+                  href="#funnel"
+                  onClick={() => trackEvent("offer_accept_clicked", { routeId: course.id, goal })}
+                  className="mt-3 inline-flex min-h-9 items-center text-xs font-semibold text-[#2563eb] hover:underline"
+                >
+                  Выбрать этот маршрут
+                </a>
               </article>
             ))}
           </div>
 
-          <div className="mt-4 overflow-x-auto rounded-lg border border-slate-200">
-            <table className="w-full min-w-[52rem] border-collapse text-left">
-              <thead className="bg-slate-50">
-                <tr className="text-xs uppercase tracking-wide text-slate-500">
-                  <th className="px-3 py-2 font-semibold">Маршрут</th>
-                  <th className="px-3 py-2 font-semibold">Метка</th>
-                  <th className="px-3 py-2 font-semibold">Для кого</th>
-                  <th className="px-3 py-2 font-semibold">Результат</th>
-                  <th className="px-3 py-2 font-semibold">Срок</th>
-                  <th className="px-3 py-2 font-semibold">Цена</th>
-                </tr>
-              </thead>
-              <tbody>
-                {otherRoutes.map((course) => (
-                  <tr key={course.id} className="border-t border-slate-200 text-sm text-slate-700">
-                    <td className="px-3 py-2 font-semibold text-[#0a1628]">{course.title}</td>
-                    <td className="px-3 py-2">
-                      <span className="rounded-full bg-slate-100 px-2 py-1 text-[0.66rem] font-semibold uppercase tracking-wide text-slate-600">
-                        {badgeLabel(course.badge)}
-                      </span>
-                    </td>
-                    <td className="px-3 py-2">{course.forWhom}</td>
-                    <td className="px-3 py-2">{course.result}</td>
-                    <td className="px-3 py-2 whitespace-nowrap">{course.duration}</td>
-                    <td className="px-3 py-2 whitespace-nowrap font-semibold text-[#0a1628]">{course.price}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="mt-4">
+            <button
+              type="button"
+              onClick={() => setShowAlternatives((prev) => !prev)}
+              className="inline-flex min-h-10 items-center rounded-md border border-slate-300 px-3 text-xs font-semibold text-slate-700"
+            >
+              {showAlternatives ? "Скрыть альтернативы" : "Показать альтернативы"}
+            </button>
           </div>
+          {showAlternatives ? (
+            <div className="mt-3 overflow-x-auto rounded-lg border border-slate-200">
+              <table className="w-full min-w-[52rem] border-collapse text-left">
+                <thead className="bg-slate-50">
+                  <tr className="text-xs uppercase tracking-wide text-slate-500">
+                    <th className="px-3 py-2 font-semibold">Маршрут</th>
+                    <th className="px-3 py-2 font-semibold">Метка</th>
+                    <th className="px-3 py-2 font-semibold">Для кого</th>
+                    <th className="px-3 py-2 font-semibold">Результат</th>
+                    <th className="px-3 py-2 font-semibold">Срок</th>
+                    <th className="px-3 py-2 font-semibold">Цена</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {otherRoutes.map((course) => (
+                    <tr key={course.id} className="border-t border-slate-200 text-sm text-slate-700">
+                      <td className="px-3 py-2 font-semibold text-[#0a1628]">{course.title}</td>
+                      <td className="px-3 py-2">
+                        <span className="rounded-full bg-slate-100 px-2 py-1 text-[0.66rem] font-semibold uppercase tracking-wide text-slate-600">
+                          {badgeLabel(course.badge)}
+                        </span>
+                      </td>
+                      <td className="px-3 py-2">{course.forWhom}</td>
+                      <td className="px-3 py-2">{course.result}</td>
+                      <td className="px-3 py-2 whitespace-nowrap">{course.duration}</td>
+                      <td className="px-3 py-2 whitespace-nowrap font-semibold text-[#0a1628]">{course.price}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : null}
 
           <div className="mt-6 text-center">
             <a href="#funnel" className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-[#2563eb] hover:underline">

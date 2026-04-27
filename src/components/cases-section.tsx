@@ -7,18 +7,24 @@ import { FunnelGoal } from "@/lib/funnel";
 
 export function CasesSection() {
   const [segment, setSegment] = useState<FunnelGoal>("speaking");
+  const [primaryRouteId, setPrimaryRouteId] = useState<string>("");
 
   useEffect(() => {
     const handler = (event: Event) => {
-      const detail = (event as CustomEvent<{ goal: FunnelGoal }>).detail;
+      const detail = (event as CustomEvent<{ goal: FunnelGoal; recommendation?: { primaryRoute?: { id: string } } }>).detail;
       if (!detail) return;
       setSegment(detail.goal);
+      if (detail.recommendation?.primaryRoute?.id) setPrimaryRouteId(detail.recommendation.primaryRoute.id);
     };
     window.addEventListener("funnel:recommendation", handler);
     return () => window.removeEventListener("funnel:recommendation", handler);
   }, []);
 
-  const filteredCases = useMemo(() => studentCases.filter((item) => item.segment === segment), [segment]);
+  const filteredCases = useMemo(() => {
+    const base = studentCases.filter((item) => item.segment === segment);
+    if (!primaryRouteId) return base;
+    return [...base].sort((a, b) => Number(b.courseId === primaryRouteId) - Number(a.courseId === primaryRouteId));
+  }, [segment, primaryRouteId]);
 
   return (
     <section className="bg-slate-50 py-[clamp(2.4rem,5.8vw,4.6rem)]" id="cases" aria-labelledby="section-cases">
@@ -59,6 +65,15 @@ export function CasesSection() {
               <div className="mt-3 space-y-2 text-sm">
                 <p className="rounded-md bg-rose-50 px-2 py-1 text-rose-800">
                   <span className="font-semibold">Было:</span> {item.before}
+                </p>
+                <p className="rounded-md bg-amber-50 px-2 py-1 text-amber-800">
+                  <span className="font-semibold">Сложность:</span> {item.difficulty}
+                </p>
+                <p className="rounded-md bg-slate-100 px-2 py-1 text-slate-700">
+                  <span className="font-semibold">Сбой:</span> {item.setback}
+                </p>
+                <p className="rounded-md bg-blue-50 px-2 py-1 text-blue-800">
+                  <span className="font-semibold">Перелом:</span> {item.turningPoint}
                 </p>
                 <p className="rounded-md bg-emerald-50 px-2 py-1 text-emerald-800">
                   <span className="font-semibold">Стало:</span> {item.after}

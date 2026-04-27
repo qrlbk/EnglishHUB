@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { LeadCaptureForm } from "@/components/lead-capture-form";
 import { FunnelGoal, funnelGoals, funnelQuestions, getFunnelRecommendation, routeBadgeLabel } from "@/lib/funnel";
 import { funnelRouteSummary } from "@/lib/whatsapp";
+import { trackEvent } from "@/lib/analytics";
 
 export function LevelTestFunnel() {
   const [goal, setGoal] = useState<FunnelGoal>("speaking");
@@ -15,6 +16,16 @@ export function LevelTestFunnel() {
   const recommendation = useMemo(() => getFunnelRecommendation(goal, totalScore), [goal, totalScore]);
   const currentQuestion = funnelQuestions[step];
   const progressPercent = Math.round(((step + (answers[currentQuestion?.id] !== undefined ? 1 : 0)) / funnelQuestions.length) * 100);
+
+  useEffect(() => {
+    trackEvent("funnel_test_started", { goal });
+  }, [goal]);
+
+  useEffect(() => {
+    if (!isComplete) return;
+    trackEvent("funnel_test_completed", { goal, level: recommendation.level });
+    trackEvent("offer_primary_shown", { primaryRoute: recommendation.primaryRoute.id, backupRoute: recommendation.backupRoute.id });
+  }, [isComplete, goal, recommendation]);
 
   function answerCurrent(score: number) {
     setAnswers((prev) => ({ ...prev, [currentQuestion.id]: score }));
@@ -129,6 +140,14 @@ export function LevelTestFunnel() {
               <p className="mt-1 text-sm text-slate-600">Ответьте на все вопросы, чтобы получить персональный результат.</p>
             ) : (
               <>
+                <div className="mt-1 rounded-md border border-slate-200 bg-white p-2">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Что система увидела</p>
+                  <ul className="mt-1 space-y-1 text-xs text-slate-700">
+                    {recommendation.diagnosticSignals.map((signal) => (
+                      <li key={signal}>• {signal}</li>
+                    ))}
+                  </ul>
+                </div>
                 <p className="mt-1 text-sm text-slate-700">
                   Ваш ориентировочный уровень: <span className="font-bold text-[#0a1628]">{recommendation.level}</span>
                 </p>
@@ -138,14 +157,29 @@ export function LevelTestFunnel() {
                 <p className="text-sm text-slate-700">
                   Запасной маршрут: <span className="font-bold text-[#0a1628]">{recommendation.backupRoute.title}</span>
                 </p>
+                <p className="mt-1 text-sm text-slate-700">{recommendation.whyNotOther}</p>
                 <p className="mt-1 text-sm text-amber-700">{recommendation.risk}</p>
                 <p className="mt-1 text-sm text-slate-600">{recommendation.reason}</p>
+                <p className="mt-1 text-sm font-semibold text-rose-700">{recommendation.riskIfDelayed}</p>
                 <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-[#102a56]">
                   {routeBadgeLabel(recommendation.primaryRoute.badge)} · {recommendation.primaryRoute.durationHint}
                 </p>
                 <p className="mt-1 text-xs text-slate-500">{funnelRouteSummary(recommendation)}</p>
-                <a href="#courses" className="mt-3 inline-flex min-h-10 items-center gap-1 text-sm font-semibold text-[#2563eb] hover:underline">
-                  Перейти к маршрутам
+                <div className="mt-2 rounded-md bg-amber-50 px-2 py-1 text-xs font-semibold text-amber-700">
+                  Персональный слот по офферу сегодня до 21:00. В группе осталось 2 места.
+                </div>
+                <a
+                  href="#courses"
+                  onClick={() =>
+                    trackEvent("offer_accept_clicked", {
+                      goal,
+                      primaryRoute: recommendation.primaryRoute.id,
+                      backupRoute: recommendation.backupRoute.id,
+                    })
+                  }
+                  className="mt-3 inline-flex min-h-10 items-center gap-1 text-sm font-semibold text-[#2563eb] hover:underline"
+                >
+                  Подтвердить основной маршрут
                   <span aria-hidden>→</span>
                 </a>
               </>

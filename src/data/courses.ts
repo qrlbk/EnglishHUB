@@ -9,6 +9,7 @@ export type Course = {
   bestFor: "speaking" | "ielts" | "work";
   badge: "recommended" | "popular" | "fast" | "career";
   priorityScore: number;
+  signalWeights: { fluency: number; grammar: number; vocabulary: number; examReadiness: number; workContext: number };
   format: string;
   price: string;
   icon: "book" | "chart" | "briefcase" | "mic" | "pen" | "child";
@@ -26,6 +27,7 @@ export const courses: Course[] = [
     bestFor: "speaking",
     badge: "popular",
     priorityScore: 80,
+    signalWeights: { fluency: 2, grammar: 3, vocabulary: 3, examReadiness: 1, workContext: 1 },
     format: "Группы / Индивидуально",
     price: "от 12 000 ₸ / мес",
     icon: "book",
@@ -41,6 +43,7 @@ export const courses: Course[] = [
     bestFor: "ielts",
     badge: "career",
     priorityScore: 95,
+    signalWeights: { fluency: 2, grammar: 3, vocabulary: 2, examReadiness: 5, workContext: 1 },
     format: "Группы / Индивидуально",
     price: "от 20 000 ₸ / месяц",
     icon: "chart",
@@ -56,6 +59,7 @@ export const courses: Course[] = [
     bestFor: "work",
     badge: "career",
     priorityScore: 92,
+    signalWeights: { fluency: 3, grammar: 2, vocabulary: 2, examReadiness: 1, workContext: 5 },
     format: "Индивидуально / мини-группы",
     price: "от 18 000 ₸ / месяц",
     icon: "briefcase",
@@ -71,6 +75,7 @@ export const courses: Course[] = [
     bestFor: "speaking",
     badge: "fast",
     priorityScore: 90,
+    signalWeights: { fluency: 5, grammar: 1, vocabulary: 3, examReadiness: 1, workContext: 2 },
     format: "Группы / Индивидуально",
     price: "от 6 000 ₸ / месяц",
     icon: "mic",
@@ -86,6 +91,7 @@ export const courses: Course[] = [
     bestFor: "work",
     badge: "popular",
     priorityScore: 75,
+    signalWeights: { fluency: 2, grammar: 2, vocabulary: 2, examReadiness: 1, workContext: 5 },
     format: "В компании / онлайн",
     price: "по запросу",
     icon: "pen",
@@ -101,6 +107,7 @@ export const courses: Course[] = [
     bestFor: "speaking",
     badge: "popular",
     priorityScore: 70,
+    signalWeights: { fluency: 3, grammar: 2, vocabulary: 3, examReadiness: 0, workContext: 0 },
     format: "Группы (по возрасту)",
     price: "от 10 000 ₸ / месяц",
     icon: "child",

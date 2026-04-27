@@ -18,8 +18,10 @@ export type FunnelRecommendation = {
   primaryRoute: FunnelRoute;
   backupRoute: FunnelRoute;
   reason: string;
+  whyNotOther: string;
   risk: string;
-  loss: string;
+  riskIfDelayed: string;
+  diagnosticSignals: string[];
 };
 
 export const funnelGoals: { id: FunnelGoal; title: string; description: string }[] = [
@@ -81,6 +83,12 @@ export function getLevelByScore(score: number): FunnelRecommendation["level"] {
 
 export function getFunnelRecommendation(goal: FunnelGoal, totalScore: number): FunnelRecommendation {
   const level = getLevelByScore(totalScore);
+  const diagnosticSignals =
+    level === "A1" || level === "A2"
+      ? ["Низкий активный словарь", "Нестабильная грамматика", "Медленная речевая реакция"]
+      : level === "B1"
+        ? ["База есть, но нестабильная беглость", "Пробелы в аргументации", "Нужна регулярная разговорная нагрузка"]
+        : ["Хорошее понимание речи", "Нужна специализация под цель", "Критична точность и скорость ответов"];
 
   if (goal === "ielts" && (level === "A1" || level === "A2")) {
     return {
@@ -98,8 +106,10 @@ export function getFunnelRecommendation(goal: FunnelGoal, totalScore: number): F
         durationHint: "после выхода на B1",
       },
       reason: "Сначала нужно поднять базу до B1, затем переходить в экзаменационный трек.",
+      whyNotOther: "Прямой вход в IELTS сейчас даст стресс и низкую конверсию усилий в балл.",
       risk: "Вы теряете баллы в IELTS из-за слабой базы по грамматике и listening.",
-      loss: "Без опоры на базовый уровень подготовка растягивается на 2-3 месяца дольше.",
+      riskIfDelayed: "Если отложить старт, подготовка к целевому band сдвинется минимум на 2-3 месяца.",
+      diagnosticSignals,
     };
   }
 
@@ -119,8 +129,10 @@ export function getFunnelRecommendation(goal: FunnelGoal, totalScore: number): F
         durationHint: "2-4 недели параллельно",
       },
       reason: "Фокус на структуре экзамена, writing/speaking и пробных тестах под ваш текущий уровень.",
+      whyNotOther: "General сейчас даст прогресс, но не закроет экзаменационный формат и тайминг.",
       risk: "Вы теряете до 0.5-1.0 band из-за неструктурных ответов и тайминга.",
-      loss: "Без экзаменационной стратегии растет риск пересдачи и лишних расходов.",
+      riskIfDelayed: "Без системной подготовки растет риск пересдачи и дополнительных затрат.",
+      diagnosticSignals,
     };
   }
 
@@ -140,8 +152,10 @@ export function getFunnelRecommendation(goal: FunnelGoal, totalScore: number): F
         durationHint: "3-6 недель",
       },
       reason: "Нужен прикладной английский для рабочих встреч, переписки и презентаций.",
+      whyNotOther: "Speaking без рабочего контекста не решает email/meeting задачи.",
       risk: "Вы теряете карьерные возможности из-за неуверенных звонков и переписки.",
-      loss: "Каждый месяц без прокачки коммуникации снижает скорость роста в должности.",
+      riskIfDelayed: "Каждый месяц без прокачки рабочей коммуникации снижает скорость карьерного роста.",
+      diagnosticSignals,
     };
   }
 
@@ -161,8 +175,10 @@ export function getFunnelRecommendation(goal: FunnelGoal, totalScore: number): F
         durationHint: "12+ недель",
       },
       reason: "Сначала важно собрать базу и запустить стабильную разговорную практику.",
+      whyNotOther: "Интенсивный speaking на слабой базе дает краткий эффект без закрепления.",
       risk: "Вы теряете уверенность в разговоре из-за пробелов в базовой грамматике.",
-      loss: "Без фундаментального трека прогресс неустойчив и быстро откатывается.",
+      riskIfDelayed: "Без фундаментального трека прогресс остается нестабильным и быстро откатывается.",
+      diagnosticSignals,
     };
   }
 
@@ -181,8 +197,10 @@ export function getFunnelRecommendation(goal: FunnelGoal, totalScore: number): F
       durationHint: "6-10 недель",
     },
     reason: "Базу уже можно перевести в беглость речи через интенсивную разговорную практику.",
+    whyNotOther: "General на этом этапе медленнее и не дает нужной разговорной интенсивности.",
     risk: "Вы теряете скорость речи и уверенность из-за недостатка регулярной практики.",
-    loss: "Без разговорного трека язык остается пассивным и редко используется в жизни.",
+    riskIfDelayed: "Без разговорного трека язык остается пассивным и редко используется в жизни.",
+    diagnosticSignals,
   };
 }
 
