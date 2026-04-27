@@ -1,4 +1,5 @@
 import { WHATSAPP_PHONE } from "./site";
+import { FunnelGoal, FunnelRecommendation } from "./funnel";
 
 const WA_BASE = "https://wa.me";
 
@@ -25,4 +26,30 @@ export function genericConsultMessage(): string {
 
 export function levelTestMessage(): string {
   return "Здравствуйте! Хочу пройти тест уровня. Как это можно сделать?";
+}
+
+function goalLabel(goal: FunnelGoal): string {
+  if (goal === "ielts") return "IELTS";
+  if (goal === "work") return "Работа";
+  return "Разговорный английский";
+}
+
+type FunnelLeadPayload = {
+  name: string;
+  phone: string;
+  goal: FunnelGoal;
+  level: FunnelRecommendation["level"];
+  recommendedCourse: string;
+};
+
+export function funnelLeadMessage(payload: FunnelLeadPayload): string {
+  return [
+    "Здравствуйте! Отправляю заявку после мини-теста.",
+    `Имя: ${payload.name}`,
+    `Телефон: ${payload.phone}`,
+    `Цель: ${goalLabel(payload.goal)}`,
+    `Ориентировочный уровень: ${payload.level}`,
+    `Рекомендованный курс: ${payload.recommendedCourse}`,
+    "Хочу уточнить расписание и ближайший старт.",
+  ].join("\n");
 }

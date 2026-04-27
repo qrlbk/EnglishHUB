@@ -1,10 +1,11 @@
 import { SiteHeader } from "@/components/site-header";
 import { Hero } from "@/components/hero";
+import { LevelTestFunnel } from "@/components/level-test-funnel";
 import { CoursesGrid } from "@/components/courses-grid";
+import { CasesSection } from "@/components/cases-section";
+import { Testimonials } from "@/components/testimonials";
 import { TeachersSection } from "@/components/teachers-section";
 import { StatsBar } from "@/components/stats-bar";
-import { Testimonials } from "@/components/testimonials";
-import { PricesSection } from "@/components/prices-section";
 import { AboutSection } from "@/components/about-section";
 import { FinalCta } from "@/components/final-cta";
 import { SiteFooter } from "@/components/site-footer";
@@ -17,11 +18,12 @@ export default function Home() {
       <SiteHeader />
       <main className="app-shell-main">
         <Hero />
+        <LevelTestFunnel />
         <CoursesGrid />
+        <CasesSection />
+        <Testimonials />
         <TeachersSection />
         <StatsBar />
-        <Testimonials />
-        <PricesSection />
         <AboutSection />
         <FinalCta />
         <SiteFooter />

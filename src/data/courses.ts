@@ -1,11 +1,11 @@
 export type Course = {
   id: string;
   title: string;
-  description: string;
-  level: string;
+  forWhom: string;
+  result: string;
+  duration: string;
   format: string;
   price: string;
-  /** Short label for an icon/emoji in the card (optional visual aid) */
   icon: "book" | "chart" | "briefcase" | "mic" | "pen" | "child";
 };
 
@@ -13,8 +13,9 @@ export const courses: Course[] = [
   {
     id: "general",
     title: "General English",
-    description: "Практика говорения, грамматика и лексика на каждом уровне в комфортном темпе.",
-    level: "A1–C1",
+    forWhom: "Новички и продолжающие, кому нужен стабильный фундамент.",
+    result: "Уверенная база + рост словаря и понимания речи.",
+    duration: "2-6 месяцев",
     format: "Группы / Индивидуально",
     price: "от 12 000 ₸ / мес",
     icon: "book",
@@ -22,46 +23,51 @@ export const courses: Course[] = [
   {
     id: "ielts",
     title: "IELTS Preparation",
-    description: "Системная подготовка к формату экзамена: все секции, пробные тесты, разбор ошибок.",
-    level: "B1+",
+    forWhom: "Тем, кто сдает IELTS для учебы или релокации.",
+    result: "Рост band score за счет стратегий и регулярных пробников.",
+    duration: "2-4 месяца",
     format: "Группы / Индивидуально",
-    price: "от 15 000 ₸ / мес",
+    price: "от 20 000 ₸ / месяц",
     icon: "chart",
   },
   {
     id: "business",
     title: "Business English",
-    description: "Переговоры, презентации, письма и деловая лексика для работы в международной среде.",
-    level: "B1–C1",
+    forWhom: "Специалисты и руководители, работающие с англоязычными задачами.",
+    result: "Уверенные звонки, письма, переговоры и презентации.",
+    duration: "2-5 месяцев",
     format: "Индивидуально / мини-группы",
-    price: "от 18 000 ₸ / мес",
+    price: "от 18 000 ₸ / месяц",
     icon: "briefcase",
   },
   {
     id: "speaking",
-    title: "Speaking & Pronunciation",
-    description: "Акцент на разговорную речь, уверенность и чистое произношение.",
-    level: "A2–B2",
+    title: "Speaking Club",
+    forWhom: "Тем, кто знает язык, но стесняется говорить.",
+    result: "Свободнее речь, лучше произношение и скорость реакции.",
+    duration: "1-3 месяца",
     format: "Группы / Индивидуально",
-    price: "от 10 000 ₸ / мес",
+    price: "от 6 000 ₸ / месяц",
     icon: "mic",
   },
   {
-    id: "writing",
-    title: "Academic & Writing",
-    description: "Эссе, письма и академическое письмо: структура, логика, стилистика.",
-    level: "B1+",
-    format: "Индивидуально",
-    price: "от 14 000 ₸ / мес",
+    id: "corporate",
+    title: "Corporate Training",
+    forWhom: "Команды и компании с рабочими KPI на английском.",
+    result: "Рост уровня коммуникации команды под реальные процессы.",
+    duration: "по согласованию",
+    format: "В компании / онлайн",
+    price: "по запросу",
     icon: "pen",
   },
   {
     id: "kids",
-    title: "English for Teens & Kids",
-    description: "Интерактивные занятия, игры и проекты, чтобы дети говорили без стеснения.",
-    level: "A1–A2",
+    title: "English for Kids",
+    forWhom: "Дети и подростки с делением по возрасту и уровню.",
+    result: "Интерес к языку, регулярная практика и контроль прогресса.",
+    duration: "3-9 месяцев",
     format: "Группы (по возрасту)",
-    price: "от 9 000 ₸ / мес",
+    price: "от 10 000 ₸ / месяц",
     icon: "child",
   },
 ];

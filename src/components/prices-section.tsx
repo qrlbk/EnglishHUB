@@ -1,9 +1,7 @@
 import { courses } from "@/data/courses";
-import { getWhatsAppLink, courseEnrollmentMessage, genericConsultMessage } from "@/lib/whatsapp";
 import { SectionHeading } from "@/components/section-heading";
 
 export function PricesSection() {
-  const wa = getWhatsAppLink(genericConsultMessage());
   return (
     <section className="bg-slate-50 py-[clamp(2.5rem,6vw,5rem)]" id="prices" aria-labelledby="section-prices">
       <div className="mx-auto max-w-6xl px-[clamp(0.9rem,3.4vw,1.5rem)]">
@@ -11,40 +9,27 @@ export function PricesSection() {
           <SectionHeading
             id="section-prices"
             title="Цены"
-            subtitle="Стоимость зависит от уровня, интенсивности и формата. Ниже — ориентиры по курсам; уточним детальную смету за 1 сообщение в WhatsApp."
+            subtitle="Ориентиры стоимости по направлениям. Для точного подбора используйте тест и рекомендацию."
           />
 
           <div className="grid gap-3.5 sm:grid-cols-2 sm:gap-4">
-            {courses.slice(0, 4).map((c) => {
-              const href = getWhatsAppLink(courseEnrollmentMessage(c.title));
-              return (
-                <div key={c.id} className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm">
+            {courses.slice(0, 4).map((c) => (
+              <div key={c.id} className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm">
                   <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
                     <div className="space-y-1">
                       <p className="font-extrabold text-[#0a1628]">{c.title}</p>
-                      <p className="text-sm text-slate-500">{c.level}</p>
+                      <p className="text-sm text-slate-500">{c.duration}</p>
                     </div>
-                    <a
-                      href={href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-1 inline-flex min-h-11 w-fit items-center rounded-xl bg-slate-100 px-3 py-2 text-sm font-bold text-[#0a1628] underline-offset-2 hover:underline sm:mt-0"
-                    >
+                    <p className="mt-1 inline-flex min-h-11 w-fit items-center rounded-xl bg-slate-100 px-3 py-2 text-sm font-bold text-[#0a1628] sm:mt-0">
                       {c.price}
-                    </a>
+                    </p>
                   </div>
                 </div>
-              );
-            })}
+            ))}
           </div>
           <div className="mt-8">
-            <a
-              href={wa}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-12 w-full items-center justify-center rounded-2xl bg-[#0a1628] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-[#132f52] sm:w-auto"
-            >
-              Уточнить цену в WhatsApp
+            <a href="#funnel" className="inline-flex min-h-12 w-full items-center justify-center rounded-2xl bg-[#0a1628] px-5 py-3 text-sm font-semibold text-white sm:w-auto">
+              Подобрать курс по уровню
             </a>
           </div>
         </div>

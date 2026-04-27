@@ -43,18 +43,18 @@ function SmallIcon({ kind }: { kind: (typeof stats)[number]["icon"] }) {
 
 export function StatsBar() {
   return (
-    <section className="border-y border-slate-200/80 bg-slate-100/80" aria-label="Показатели школы">
-      <div className="mx-auto max-w-6xl px-[clamp(0.9rem,3.4vw,1.5rem)] py-[clamp(1.2rem,3.6vw,2rem)]">
-        <ul className="grid gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-5">
+    <section className="border-y border-slate-200 bg-[#f7fafc]" aria-label="Показатели школы">
+      <div className="mx-auto max-w-6xl px-[clamp(0.9rem,3.4vw,1.5rem)] py-[clamp(1rem,3vw,1.4rem)]">
+        <ul className="grid gap-2 sm:grid-cols-2 sm:gap-2.5 xl:grid-cols-5">
           {stats.map((s) => (
             <li
               key={s.label}
-              className="flex min-h-14 items-start gap-3 rounded-2xl border border-slate-200/60 bg-white/70 px-3 py-3 text-sm text-slate-800 shadow-sm"
+              className="flex min-h-10 items-start gap-2 rounded-md border border-slate-200 bg-white px-2.5 py-2 text-sm text-slate-800"
             >
-              <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-slate-50">
+              <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-md bg-slate-50">
                 <SmallIcon kind={s.icon} />
               </span>
-              <span className="font-semibold leading-snug">{s.label}</span>
+              <span className="font-semibold leading-snug text-[0.77rem]">{s.label}</span>
             </li>
           ))}
         </ul>

@@ -1,37 +1,37 @@
-import { getWhatsAppLink, genericConsultMessage } from "@/lib/whatsapp";
 import { SITE } from "@/lib/site";
 
 const nav = [
+  { href: "#funnel", label: "Тест уровня" },
   { href: "#courses", label: "Курсы" },
+  { href: "#cases", label: "Кейсы" },
   { href: "#teachers", label: "Преподаватели" },
-  { href: "#prices", label: "Цены" },
   { href: "#reviews", label: "Отзывы" },
   { href: "#about", label: "О школе" },
   { href: "#contacts", label: "Контакты" },
 ];
 
 export function SiteHeader() {
-  const waCta = getWhatsAppLink(genericConsultMessage());
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/95 backdrop-blur-md">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-2 px-[clamp(0.75rem,3.2vw,1.5rem)] py-2.5 sm:gap-3 sm:py-3">
+    <header className="border-b border-slate-200 bg-white">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-[clamp(0.75rem,3.2vw,1.5rem)] py-2.5">
         <a href="#top" className="group flex min-w-0 items-center gap-2">
-          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[#0a1628] to-[#1e3a5f] text-white ring-1 ring-black/5 sm:h-10 sm:w-10">
-            <span className="text-lg leading-none" aria-hidden>
-              🎓
-            </span>
+          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-md border border-slate-200 bg-slate-50 text-[#0a1628]">
+            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
+              <path d="M12 3 2 8l10 5 10-5-10-5Z" />
+              <path d="M6 10.5v4.5c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5" />
+            </svg>
           </div>
           <div className="min-w-0">
-            <p className="truncate text-[0.86rem] font-extrabold tracking-tight text-[#0a1628] sm:text-base">
+            <p className="truncate text-[0.86rem] font-bold tracking-tight text-[#0a1628] sm:text-base">
               {SITE.name}
             </p>
-            <p className="hidden text-[0.7rem] font-medium uppercase tracking-wide text-slate-500 sm:block">
+            <p className="hidden text-[0.62rem] font-medium uppercase tracking-wide text-slate-500 sm:block">
               {SITE.tagline}
             </p>
           </div>
         </a>
 
-        <nav className="hidden items-center gap-5 text-sm font-medium text-slate-700 lg:flex" aria-label="Основная навигация">
+        <nav className="hidden items-center gap-6 text-[0.84rem] font-medium text-slate-700 lg:flex" aria-label="Основная навигация">
           {nav.map((item) => (
             <a
               key={item.href}
@@ -52,7 +52,7 @@ export function SiteHeader() {
               <path d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </summary>
-          <div className="fixed left-1/2 top-[4.4rem] z-50 w-[min(92vw,21rem)] -translate-x-1/2 rounded-2xl border border-slate-200/80 bg-white p-2 shadow-xl">
+          <div className="fixed left-1/2 top-[4.4rem] z-50 w-[min(92vw,21rem)] -translate-x-1/2 rounded-xl border border-slate-200 bg-white p-2 shadow-lg">
             <nav className="flex max-h-[68dvh] flex-col overflow-auto text-sm font-semibold" aria-label="Мобильная навигация">
               {nav.map((item) => (
                 <a
@@ -67,7 +67,7 @@ export function SiteHeader() {
           </div>
         </details>
 
-        <div className="flex items-center gap-1.5 sm:gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           <div className="hidden min-w-0 sm:block text-right">
             <a href={`tel:${SITE.phoneE164}`} className="text-sm font-semibold text-[#0a1628]">
               {SITE.phoneDisplay}
@@ -75,13 +75,11 @@ export function SiteHeader() {
             <p className="text-xs text-slate-500">{SITE.hours}</p>
           </div>
           <a
-            href={waCta}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="shrink-0 rounded-xl bg-[#0a1628] px-3 py-2.5 text-[11px] font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-[#132f52] sm:px-4 sm:text-sm"
+            href="#funnel"
+            className="shrink-0 rounded-md bg-[#102a56] px-3 py-2.5 text-[11px] font-semibold text-white transition hover:bg-[#173870] sm:px-4 sm:text-sm"
           >
-            <span className="sm:hidden">Записаться</span>
-            <span className="hidden sm:inline">Записаться на урок</span>
+            <span className="sm:hidden">Тест</span>
+            <span className="hidden sm:inline">Проверить уровень</span>
           </a>
         </div>
       </div>

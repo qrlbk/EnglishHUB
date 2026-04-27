@@ -16,23 +16,24 @@ function Stars() {
 
 export function Testimonials() {
   return (
-    <section className="bg-white py-[clamp(2.5rem,6vw,5rem)]" id="reviews" aria-labelledby="section-reviews">
+    <section className="bg-white py-[clamp(2.2rem,5.5vw,4.2rem)]" id="reviews" aria-labelledby="section-reviews">
       <div className="mx-auto max-w-6xl px-[clamp(0.9rem,3.4vw,1.5rem)]">
-        <div className="rounded-[1.75rem] border border-slate-200/70 bg-white p-4 shadow-sm sm:rounded-none sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none">
+        <div>
           <SectionHeading
             id="section-reviews"
             title="Отзывы наших студентов"
-            subtitle="Коротко о главном: прогресс, атмосфера и ощутимый результат — без пустых обещаний."
+            subtitle="Результаты и впечатления наших студентов."
+            align="center"
           />
 
-          <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-4">
+          <div className="grid gap-2.5 sm:grid-cols-2 sm:gap-2.5 xl:grid-cols-4">
             {testimonials.map((t) => (
               <article
-                key={t.name + t.course}
-                className="flex h-full min-h-56 flex-col rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:p-5"
+                key={t.name + t.track}
+                className="flex h-full min-h-44 flex-col rounded-lg border border-slate-200 bg-white p-3"
               >
-                <div className="mb-3 flex items-center gap-3">
-                  <div className="relative h-10 w-10 overflow-hidden rounded-full ring-1 ring-slate-200">
+                <div className="mb-2 flex items-center gap-2.5">
+                  <div className="relative h-9 w-9 overflow-hidden rounded-md ring-1 ring-slate-200">
                     <Image
                       src={t.avatarSrc}
                       alt={t.name}
@@ -42,20 +43,31 @@ export function Testimonials() {
                     />
                   </div>
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-extrabold text-[#0a1628]">{t.name}</p>
-                    <p className="text-xs text-slate-500">
-                      {t.age} · {t.course}
+                    <p className="truncate text-[0.8rem] font-extrabold text-[#0a1628]">{t.name}</p>
+                    <p className="text-[0.68rem] text-slate-500">
+                      {t.age} · {t.track} · {t.format}
                     </p>
                   </div>
                 </div>
-                <p className="flex-1 text-sm leading-relaxed text-slate-600">{t.text}</p>
-                <div className="mt-4 border-t border-slate-200/60 pt-3">
-                  <Stars />
+                <div className="mb-2 space-y-1 text-[0.72rem]">
+                  <p className="rounded bg-rose-50 px-2 py-1 text-rose-800">
+                    <span className="font-semibold">Было:</span> {t.before}
+                  </p>
+                  <p className="rounded bg-emerald-50 px-2 py-1 text-emerald-800">
+                    <span className="font-semibold">Стало:</span> {t.after}
+                  </p>
+                </div>
+                <p className="flex-1 text-[0.78rem] leading-relaxed text-slate-600">{t.text}</p>
+                <div className="mt-2.5 border-t border-slate-200/60 pt-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <Stars />
+                    <span className="text-[0.68rem] font-semibold text-slate-500">{t.period}</span>
+                  </div>
                 </div>
               </article>
             ))}
           </div>
-          <div className="mt-8">
+          <div className="mt-6 text-center">
             <a href="#reviews" className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-[#2563eb] hover:underline">
               Смотреть все отзывы
               <span aria-hidden>→</span>

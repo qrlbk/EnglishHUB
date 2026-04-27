@@ -62,10 +62,6 @@ summary {
     font-size: 15px;
   }
 
-  body {
-    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 32%);
-  }
-
   .app-shell-main {
     padding-bottom: calc(var(--mobile-bottom-nav-h) + var(--mobile-sticky-cta-h) + var(--mobile-safe-bottom) + 1rem);
   }

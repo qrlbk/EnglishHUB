@@ -19,8 +19,8 @@ export const teachers: Teacher[] = [
     avatarSrc: withBasePath("/images/teacher-1.jpg"),
   },
   {
-    name: "Dmitry Ivanov",
-    role: "Business & Speaking",
+    name: "David Mitchell",
+    role: "Business English Coach",
     points: [
       "Корпоративные программы, презентации",
       "Опыт в международных IT-компаниях",
@@ -29,8 +29,8 @@ export const teachers: Teacher[] = [
     avatarSrc: withBasePath("/images/teacher-2.jpg"),
   },
   {
-    name: "Elena Kairatova",
-    role: "General English & Teens",
+    name: "Elena Kim",
+    role: "General English Teacher",
     points: [
       "Игровые методики для детей и подростков",
       "Фокус на мотивации и речи",
@@ -39,8 +39,8 @@ export const teachers: Teacher[] = [
     avatarSrc: withBasePath("/images/teacher-3.jpg"),
   },
   {
-    name: "Omar Suleimenov",
-    role: "Pronunciation & Listening",
+    name: "Michael Brown",
+    role: "Kids English Teacher",
     points: [
       "Постановка произношения, connected speech",
       "Материалы: подкасты, дебаты, ролевые игры",

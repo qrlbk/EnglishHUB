@@ -1,8 +1,8 @@
 const items = [
   { href: "#top", label: "Главная" },
+  { href: "#funnel", label: "Тест" },
   { href: "#courses", label: "Курсы" },
   { href: "#teachers", label: "Преподы" },
-  { href: "#prices", label: "Цены" },
   { href: "#contacts", label: "Контакты" },
 ];
 

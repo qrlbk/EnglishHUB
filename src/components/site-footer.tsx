@@ -1,8 +1,6 @@
-import { getWhatsAppLink, genericConsultMessage } from "@/lib/whatsapp";
 import { SITE } from "@/lib/site";
 
 export function SiteFooter() {
-  const wa = getWhatsAppLink(genericConsultMessage());
   return (
     <footer className="border-t border-slate-200/80 bg-white" id="contacts">
       <div className="mx-auto max-w-6xl px-[clamp(0.9rem,3.4vw,1.5rem)] py-[clamp(2rem,5.5vw,2.6rem)]">
@@ -11,20 +9,15 @@ export function SiteFooter() {
             <p className="text-lg font-extrabold text-[#0a1628]">{SITE.name}</p>
             <p className="text-sm text-slate-500">{SITE.tagline}</p>
             <p className="mt-3 max-w-prose text-sm leading-relaxed text-slate-600">
-              Контакты: напишите в WhatsApp, чтобы согласовать тест/консультацию или выбрать курс.
+              Контакты: начните с теста уровня, затем получите персональную рекомендацию и готовую заявку.
             </p>
           </div>
           <div className="space-y-2 text-sm">
             <a href={`tel:${SITE.phoneE164}`} className="inline-flex min-h-11 items-center font-semibold text-[#0a1628] hover:underline">
               {SITE.phoneDisplay}
             </a>
-            <a
-              href={wa}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-11 items-center text-[#2563eb] hover:underline"
-            >
-              WhatsApp
+            <a href="#funnel" className="inline-flex min-h-11 items-center text-[#2563eb] hover:underline">
+              Пройти тест уровня
             </a>
             <p className="text-slate-500">{SITE.hours}</p>
           </div>
