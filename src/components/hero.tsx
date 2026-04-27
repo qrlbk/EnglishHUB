@@ -55,8 +55,7 @@ export function Hero() {
                 Английский для реальных целей и реальных людей
               </h1>
               <p className="max-w-xl text-[clamp(0.95rem,2.7vw,1.08rem)] leading-relaxed text-slate-600">
-                Онлайн и офлайн курсы для детей и взрослых от уровня A1 до C1. Говорите увереннее в жизни, работе и
-                путешествиях.
+                Не просто курсы, а персональный маршрут обучения: диагностика, рекомендуемый трек и понятный результат.
               </p>
             </div>
 
@@ -71,11 +70,7 @@ export function Hero() {
                 href="#courses"
                 className="inline-flex h-11 w-full items-center justify-center rounded-md border border-slate-300 bg-white px-5 text-sm font-semibold text-[#0a1628] transition hover:bg-slate-50 sm:w-auto"
               >
-                Смотреть курсы
-              </a>
-              <a href="#teachers" className="inline-flex min-h-11 w-fit items-center gap-1 text-sm font-semibold text-[#1d4c9d] hover:underline">
-                Наши преподаватели
-                <span aria-hidden>→</span>
+                Смотреть маршруты
               </a>
             </div>
 

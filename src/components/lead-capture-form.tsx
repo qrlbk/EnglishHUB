@@ -23,10 +23,13 @@ export function LeadCaptureForm({ goal, recommendation }: LeadCaptureFormProps) 
         phone,
         goal,
         level: recommendation.level,
-        recommendedCourse: recommendation.courseTitle,
+        primaryRoute: recommendation.primaryRoute.title,
+        backupRoute: recommendation.backupRoute.title,
+        risk: recommendation.risk,
+        durationHint: recommendation.primaryRoute.durationHint,
       }),
     );
-  }, [submitted, name, phone, goal, recommendation.level, recommendation.courseTitle]);
+  }, [submitted, name, phone, goal, recommendation]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -38,7 +41,7 @@ export function LeadCaptureForm({ goal, recommendation }: LeadCaptureFormProps) 
     <section className="rounded-lg border border-slate-200 bg-white p-4" aria-label="Форма захвата контакта">
       <h3 className="text-base font-bold text-[#0a1628]">Получите персональный план и напишите в WhatsApp</h3>
       <p className="mt-1 text-sm text-slate-600">
-        Оставьте контакт, чтобы менеджер сразу видел ваш уровень, цель и рекомендованный курс.
+        Оставьте контакт, чтобы менеджер сразу видел ваш уровень, риски и рекомендуемый маршрут.
       </p>
 
       <form className="mt-4 grid gap-3 sm:grid-cols-2" onSubmit={handleSubmit}>

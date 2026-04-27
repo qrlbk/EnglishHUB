@@ -1,5 +1,5 @@
 import { WHATSAPP_PHONE } from "./site";
-import { FunnelGoal, FunnelRecommendation } from "./funnel";
+import { FunnelGoal, FunnelRecommendation, routeBadgeLabel } from "./funnel";
 
 const WA_BASE = "https://wa.me";
 
@@ -39,7 +39,10 @@ type FunnelLeadPayload = {
   phone: string;
   goal: FunnelGoal;
   level: FunnelRecommendation["level"];
-  recommendedCourse: string;
+  primaryRoute: string;
+  backupRoute: string;
+  risk: string;
+  durationHint: string;
 };
 
 export function funnelLeadMessage(payload: FunnelLeadPayload): string {
@@ -49,7 +52,17 @@ export function funnelLeadMessage(payload: FunnelLeadPayload): string {
     `Телефон: ${payload.phone}`,
     `Цель: ${goalLabel(payload.goal)}`,
     `Ориентировочный уровень: ${payload.level}`,
-    `Рекомендованный курс: ${payload.recommendedCourse}`,
+    `Основной маршрут: ${payload.primaryRoute}`,
+    `Запасной маршрут: ${payload.backupRoute}`,
+    `Ключевой риск: ${payload.risk}`,
+    `Рекомендованный срок старта: ${payload.durationHint}`,
     "Хочу уточнить расписание и ближайший старт.",
   ].join("\n");
+}
+
+export function funnelRouteSummary(recommendation: FunnelRecommendation): string {
+  return [
+    `${routeBadgeLabel(recommendation.primaryRoute.badge)}: ${recommendation.primaryRoute.title}`,
+    `Альтернатива: ${recommendation.backupRoute.title}`,
+  ].join(" | ");
 }
