@@ -1,3 +1,5 @@
+import { withBasePath } from "@/lib/site";
+
 export type Teacher = {
   name: string;
   role: string;
@@ -14,7 +16,7 @@ export const teachers: Teacher[] = [
       "Средний band учеников: 6.5–7.5",
       "Сильная зона: Writing & Reading",
     ],
-    avatarSrc: "/images/teacher-1.jpg",
+    avatarSrc: withBasePath("/images/teacher-1.jpg"),
   },
   {
     name: "Dmitry Ivanov",
@@ -24,7 +26,7 @@ export const teachers: Teacher[] = [
       "Опыт в международных IT-компаниях",
       "Формат: интенсив / индивидуально",
     ],
-    avatarSrc: "/images/teacher-2.jpg",
+    avatarSrc: withBasePath("/images/teacher-2.jpg"),
   },
   {
     name: "Elena Kairatova",
@@ -34,7 +36,7 @@ export const teachers: Teacher[] = [
       "Фокус на мотивации и речи",
       "Создаёт дружелюбную атмосферу",
     ],
-    avatarSrc: "/images/teacher-3.jpg",
+    avatarSrc: withBasePath("/images/teacher-3.jpg"),
   },
   {
     name: "Omar Suleimenov",
@@ -44,6 +46,6 @@ export const teachers: Teacher[] = [
       "Материалы: подкасты, дебаты, ролевые игры",
       "Сильный акцент на уверенность",
     ],
-    avatarSrc: "/images/teacher-4.jpg",
+    avatarSrc: withBasePath("/images/teacher-4.jpg"),
   },
 ];

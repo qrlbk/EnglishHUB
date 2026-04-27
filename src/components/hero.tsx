@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { getWhatsAppLink, genericConsultMessage, levelTestMessage } from "@/lib/whatsapp";
+import { withBasePath } from "@/lib/site";
 
 const featureItems = [
   { title: "Бесплатный пробный урок", icon: "check" as const },
@@ -114,7 +115,7 @@ export function Hero() {
                 aria-label="Преподаватель в классе, учебные материалы"
               >
                 <Image
-                  src="/images/hero-class.jpg"
+                  src={withBasePath("/images/hero-class.jpg")}
                   alt="Преподаватель помогает студентам на уроке английского"
                   fill
                   priority

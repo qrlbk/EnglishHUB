@@ -11,4 +11,9 @@ export const SITE = {
   /** For tel: and wa.me (same as WHATSAPP_PHONE with +) */
   phoneE164: "+77072858965",
   hours: "Пн–Сб, 9:00–20:00",
+  basePath: process.env.NODE_ENV === "production" ? "/EnglishHUB" : "",
 } as const;
+
+export function withBasePath(path: string): string {
+  return `${SITE.basePath}${path.startsWith("/") ? path : `/${path}`}`;
+}
