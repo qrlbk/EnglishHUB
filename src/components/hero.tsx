@@ -1,5 +1,10 @@
+"use client";
+
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { withBasePath } from "@/lib/site";
+import { SectionReveal } from "@/components/section-reveal";
+import { hoverLift, tapPress } from "@/lib/motion";
 
 const featureItems = [
   { title: "Бесплатный пробный урок", icon: "check" as const },
@@ -43,48 +48,53 @@ function MiniIcon({ kind }: { kind: "check" | "users" | "clock" | "award" }) {
 
 export function Hero() {
   return (
-    <section className="border-b border-slate-200 bg-white" id="top">
+    <section className="border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950" id="top">
       <div className="mx-auto max-w-6xl px-[clamp(0.9rem,3.4vw,1.5rem)] py-[clamp(1.8rem,5.5vw,3.5rem)]">
-        <div className="grid items-center gap-7 lg:grid-cols-[1.03fr_1fr] lg:gap-10">
+        <SectionReveal className="grid items-center gap-7 lg:grid-cols-[1.03fr_1fr] lg:gap-10">
           <div className="order-2 space-y-5 lg:order-1 lg:space-y-6">
             <div className="space-y-3">
               <p className="inline-flex max-w-prose text-xs font-semibold uppercase tracking-wide text-[#2563eb] sm:text-[0.83rem]">
                 Онлайн и очно · все уровни
               </p>
-              <h1 className="max-w-[13ch] text-[clamp(1.95rem,7.7vw,3.3rem)] font-extrabold leading-[1.02] tracking-tight text-[#0a1628]">
+              <h1 className="max-w-[13ch] text-[clamp(1.95rem,7.7vw,3.3rem)] font-extrabold leading-[1.02] tracking-tight text-[#0a1628] dark:text-slate-100">
                 Английский для реальных целей и реальных людей
               </h1>
-              <p className="max-w-xl text-[clamp(0.95rem,2.7vw,1.08rem)] leading-relaxed text-slate-600">
+              <p className="max-w-xl text-[clamp(0.95rem,2.7vw,1.08rem)] leading-relaxed text-slate-600 dark:text-slate-300">
                 Не просто курсы, а персональный маршрут обучения: диагностика, рекомендуемый трек и понятный результат.
               </p>
             </div>
 
             <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
-              <a
+              <motion.a
                 href="#funnel"
+                whileHover={hoverLift}
+                whileTap={tapPress}
                 className="inline-flex h-11 w-full items-center justify-center rounded-md bg-[#102a56] px-5 text-sm font-semibold text-white transition hover:bg-[#173870] sm:w-auto"
               >
                 Пройти тест уровня
-              </a>
-              <a
+              </motion.a>
+              <motion.a
                 href="#courses"
-                className="inline-flex h-11 w-full items-center justify-center rounded-md border border-slate-300 bg-white px-5 text-sm font-semibold text-[#0a1628] transition hover:bg-slate-50 sm:w-auto"
+                whileHover={hoverLift}
+                whileTap={tapPress}
+                className="inline-flex h-11 w-full items-center justify-center rounded-md border border-slate-300 bg-white px-5 text-sm font-semibold text-[#0a1628] transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 sm:w-auto"
               >
                 Смотреть маршруты
-              </a>
+              </motion.a>
             </div>
 
             <ul className="grid gap-2.5 sm:grid-cols-2">
               {featureItems.map((f) => (
-                <li
+                <motion.li
                   key={f.title}
-                  className="flex items-start gap-3 rounded-lg border border-slate-200 bg-white p-3"
+                  whileHover={hoverLift}
+                  className="flex items-start gap-3 rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-700 dark:bg-slate-900"
                 >
                   <span className="mt-0.5 grid h-8 w-8 place-items-center rounded-md bg-slate-50">
                     <MiniIcon kind={f.icon} />
                   </span>
-                  <p className="text-sm font-medium leading-snug text-slate-800">{f.title}</p>
-                </li>
+                  <p className="text-sm font-medium leading-snug text-slate-800 dark:text-slate-100">{f.title}</p>
+                </motion.li>
               ))}
             </ul>
           </div>
@@ -106,7 +116,7 @@ export function Hero() {
               <p className="sr-only">Декоративная визуализация: современный класс, спокойная цветовая гамма</p>
             </div>
           </div>
-        </div>
+        </SectionReveal>
       </div>
     </section>
   );

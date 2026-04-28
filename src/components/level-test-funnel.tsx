@@ -1,15 +1,21 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import { LeadCaptureForm } from "@/components/lead-capture-form";
 import { FunnelGoal, funnelGoals, funnelQuestions, getFunnelRecommendation, routeBadgeLabel } from "@/lib/funnel";
 import { funnelRouteSummary } from "@/lib/whatsapp";
-import { trackEvent } from "@/lib/analytics";
+import { exportSessionEvents, trackEvent } from "@/lib/analytics";
+import { SectionReveal } from "@/components/section-reveal";
+import { SkeletonBlock } from "@/components/skeleton-block";
+import { tapPress } from "@/lib/motion";
 
 export function LevelTestFunnel() {
   const [goal, setGoal] = useState<FunnelGoal>("speaking");
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [step, setStep] = useState(0);
+  const [offerAccepted, setOfferAccepted] = useState(false);
+  const [isCalculating, setIsCalculating] = useState(false);
   const isComplete = Object.keys(answers).length === funnelQuestions.length;
 
   const totalScore = useMemo(() => Object.values(answers).reduce((sum, value) => sum + value, 0), [answers]);
@@ -18,14 +24,55 @@ export function LevelTestFunnel() {
   const progressPercent = Math.round(((step + (answers[currentQuestion?.id] !== undefined ? 1 : 0)) / funnelQuestions.length) * 100);
 
   useEffect(() => {
-    trackEvent("funnel_test_started", { goal });
+    trackEvent(
+      "funnel_test_started",
+      { segment: goal },
+      { source: "level_test_funnel", step: "goal", dedupeKey: `test-start:${goal}` },
+    );
   }, [goal]);
 
   useEffect(() => {
     if (!isComplete) return;
-    trackEvent("funnel_test_completed", { goal, level: recommendation.level });
-    trackEvent("offer_primary_shown", { primaryRoute: recommendation.primaryRoute.id, backupRoute: recommendation.backupRoute.id });
+    trackEvent(
+      "funnel_test_completed",
+      { segment: goal, level: recommendation.level, primaryRoute: recommendation.primaryRoute.id, backupRoute: recommendation.backupRoute.id },
+      { source: "level_test_funnel", step: "result", dedupeKey: `test-complete:${goal}:${recommendation.level}` },
+    );
+    trackEvent(
+      "offer_primary_shown",
+      { segment: goal, level: recommendation.level, primaryRoute: recommendation.primaryRoute.id, backupRoute: recommendation.backupRoute.id },
+      { source: "level_test_funnel", step: "offer", dedupeKey: `offer-shown:${goal}:${recommendation.primaryRoute.id}:${recommendation.backupRoute.id}` },
+    );
   }, [isComplete, goal, recommendation]);
+
+  useEffect(() => {
+    if (!isComplete || offerAccepted) return;
+    const timer = window.setTimeout(() => {
+      if (!offerAccepted) {
+        trackEvent(
+          "offer_viewed_no_accept",
+          { segment: goal, level: recommendation.level, primaryRoute: recommendation.primaryRoute.id },
+          { source: "level_test_funnel", step: "offer", dedupeKey: `offer-no-accept:${goal}:${recommendation.primaryRoute.id}` },
+        );
+      }
+    }, 12000);
+    return () => window.clearTimeout(timer);
+  }, [isComplete, offerAccepted, goal, recommendation]);
+
+  useEffect(() => {
+    return () => {
+      if (!isComplete && Object.keys(answers).length > 0) {
+        trackEvent(
+          "test_abandoned",
+          { segment: goal, step: step + 1, answeredCount: Object.keys(answers).length, lastQuestion: currentQuestion?.id ?? null },
+          { source: "level_test_funnel", step: "test", dedupeKey: `test-abandoned:${goal}:${Object.keys(answers).length}` },
+        );
+      }
+      if (process.env.NODE_ENV !== "production") {
+        exportSessionEvents();
+      }
+    };
+  }, [isComplete, answers, goal, step, currentQuestion]);
 
   function answerCurrent(score: number) {
     setAnswers((prev) => ({ ...prev, [currentQuestion.id]: score }));
@@ -34,40 +81,44 @@ export function LevelTestFunnel() {
       setStep(next);
       return;
     }
+    setIsCalculating(true);
 
     const nextAnswers = { ...answers, [currentQuestion.id]: score };
     const nextTotal = Object.values(nextAnswers).reduce((sum, value) => sum + value, 0);
     const nextRecommendation = getFunnelRecommendation(goal, nextTotal);
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(
-        new CustomEvent("funnel:recommendation", {
-          detail: { goal, recommendation: nextRecommendation },
-        }),
-      );
-    }
+    window.setTimeout(() => {
+      setIsCalculating(false);
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(
+          new CustomEvent("funnel:recommendation", {
+            detail: { goal, recommendation: nextRecommendation },
+          }),
+        );
+      }
+    }, 480);
   }
 
   return (
-    <section className="bg-slate-50 py-[clamp(2.2rem,5.4vw,4rem)]" id="funnel" aria-labelledby="section-funnel">
+    <section className="bg-slate-50 py-[clamp(2.2rem,5.4vw,4rem)] dark:bg-slate-900" id="funnel" aria-labelledby="section-funnel">
       <div className="mx-auto max-w-6xl px-[clamp(0.9rem,3.4vw,1.5rem)]">
-        <div className="space-y-6 rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
+        <SectionReveal className="space-y-6 rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-950 sm:p-5">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-[#2563eb]">Главный шаг</p>
-            <h2 id="section-funnel" className="mt-1 text-2xl font-extrabold tracking-tight text-[#0a1628]">
+            <h2 id="section-funnel" className="mt-1 text-2xl font-extrabold tracking-tight text-[#0a1628] dark:text-slate-100">
               Проверка уровня и подбор курса
             </h2>
-            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600">
+            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
               Короткая диагностика за 2-3 минуты: сначала цель, потом уровень, затем персональная рекомендация.
             </p>
           </div>
 
           <div className="space-y-3">
-            <p className="text-sm font-semibold text-[#0a1628]">1) Ваша цель</p>
+            <p className="text-sm font-semibold text-[#0a1628] dark:text-slate-100">1) Ваша цель</p>
             <div className="grid gap-2 sm:grid-cols-3">
               {funnelGoals.map((item) => {
                 const active = goal === item.id;
                 return (
-                  <button
+                  <motion.button
                     key={item.id}
                     type="button"
                     onClick={() => {
@@ -75,69 +126,91 @@ export function LevelTestFunnel() {
                       setStep(0);
                       setAnswers({});
                     }}
+                    whileTap={tapPress}
                     className={`rounded-md border px-3 py-3 text-left transition ${
-                      active ? "border-[#102a56] bg-[#102a56] text-white" : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
+                      active
+                        ? "border-[#102a56] bg-[#102a56] text-white"
+                        : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
                     }`}
                   >
                     <p className="text-sm font-semibold">{item.title}</p>
                     <p className={`text-xs ${active ? "text-slate-100" : "text-slate-500"}`}>{item.description}</p>
-                  </button>
+                  </motion.button>
                 );
               })}
             </div>
           </div>
 
           <div className="space-y-3">
-            <p className="text-sm font-semibold text-[#0a1628]">2) Быстрый тест уровня</p>
+            <p className="text-sm font-semibold text-[#0a1628] dark:text-slate-100">2) Быстрый тест уровня</p>
             <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
-              <div className="h-full rounded-full bg-[#102a56] transition-all" style={{ width: `${progressPercent}%` }} />
+              <motion.div
+                className="h-full rounded-full bg-[#102a56] transition-all"
+                initial={false}
+                animate={{ width: `${progressPercent}%` }}
+                transition={{ duration: 0.24 }}
+              />
             </div>
-            <p className="text-xs font-medium text-slate-500">Прогресс: {progressPercent}%</p>
-            <div className="space-y-2 rounded-md border border-slate-200 p-3">
+            <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Прогресс: {progressPercent}%</p>
+            <div className="space-y-2 rounded-md border border-slate-200 p-3 dark:border-slate-700">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                 Вопрос {Math.min(step + 1, funnelQuestions.length)} из {funnelQuestions.length}
               </p>
-              <p className="text-sm font-semibold text-slate-800">{currentQuestion.prompt}</p>
-              <div className="grid gap-1.5">
-                {currentQuestion.options.map((option) => (
-                  <button
-                    key={option.label}
-                    type="button"
-                    onClick={() => answerCurrent(option.score)}
-                    className="flex items-center justify-between rounded-md border border-slate-200 px-3 py-2 text-left text-sm text-slate-700 transition hover:border-[#102a56] hover:bg-slate-50"
-                  >
-                    <span>{option.label}</span>
-                    <span aria-hidden>→</span>
-                  </button>
-                ))}
-              </div>
+              {!isCalculating ? (
+                <>
+                  <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{currentQuestion.prompt}</p>
+                  <div className="grid gap-1.5">
+                    {currentQuestion.options.map((option) => (
+                      <motion.button
+                        key={option.label}
+                        type="button"
+                        whileTap={tapPress}
+                        onClick={() => answerCurrent(option.score)}
+                        className="flex items-center justify-between rounded-md border border-slate-200 px-3 py-2 text-left text-sm text-slate-700 transition hover:border-[#102a56] hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+                      >
+                        <span>{option.label}</span>
+                        <span aria-hidden>→</span>
+                      </motion.button>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div className="grid gap-2">
+                  <SkeletonBlock className="h-4 w-2/3" />
+                  <SkeletonBlock className="h-10 w-full" />
+                  <SkeletonBlock className="h-10 w-full" />
+                  <SkeletonBlock className="h-10 w-5/6" />
+                </div>
+              )}
             </div>
             <div className="flex items-center justify-between">
-              <button
+              <motion.button
                 type="button"
                 onClick={() => setStep((s) => Math.max(0, s - 1))}
                 disabled={step === 0}
+                whileTap={tapPress}
                 className="inline-flex h-9 items-center rounded-md border border-slate-300 px-3 text-xs font-semibold text-slate-600 disabled:opacity-40"
               >
                 Назад
-              </button>
-              <button
+              </motion.button>
+              <motion.button
                 type="button"
                 onClick={() => {
                   setStep(0);
                   setAnswers({});
                 }}
+                whileTap={tapPress}
                 className="inline-flex h-9 items-center rounded-md px-3 text-xs font-semibold text-[#102a56] hover:bg-slate-100"
               >
                 Сбросить тест
-              </button>
+              </motion.button>
             </div>
           </div>
 
-          <div className="rounded-md border border-slate-200 bg-slate-50 p-3">
-            <p className="text-sm font-semibold text-[#0a1628]">3) Персональный оффер</p>
+          <div className="rounded-md border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-900">
+            <p className="text-sm font-semibold text-[#0a1628] dark:text-slate-100">3) Персональный оффер</p>
             {!isComplete ? (
-              <p className="mt-1 text-sm text-slate-600">Ответьте на все вопросы, чтобы получить персональный результат.</p>
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">Ответьте на все вопросы, чтобы получить персональный результат.</p>
             ) : (
               <>
                 <div className="mt-1 rounded-md border border-slate-200 bg-white p-2">
@@ -171,11 +244,19 @@ export function LevelTestFunnel() {
                 <a
                   href="#courses"
                   onClick={() =>
-                    trackEvent("offer_accept_clicked", {
-                      goal,
-                      primaryRoute: recommendation.primaryRoute.id,
-                      backupRoute: recommendation.backupRoute.id,
-                    })
+                    {
+                      setOfferAccepted(true);
+                      trackEvent(
+                        "offer_accept_clicked",
+                        {
+                          segment: goal,
+                          level: recommendation.level,
+                          primaryRoute: recommendation.primaryRoute.id,
+                          backupRoute: recommendation.backupRoute.id,
+                        },
+                        { source: "level_test_funnel", step: "offer", dedupeKey: `offer-accept:${goal}:${recommendation.primaryRoute.id}` },
+                      );
+                    }
                   }
                   className="mt-3 inline-flex min-h-10 items-center gap-1 text-sm font-semibold text-[#2563eb] hover:underline"
                 >
@@ -187,7 +268,7 @@ export function LevelTestFunnel() {
           </div>
 
           {isComplete ? <LeadCaptureForm goal={goal} recommendation={recommendation} /> : null}
-        </div>
+        </SectionReveal>
       </div>
     </section>
   );

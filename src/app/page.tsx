@@ -9,10 +9,12 @@ import { FinalCta } from "@/components/final-cta";
 import { SiteFooter } from "@/components/site-footer";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { MobileStickyCta } from "@/components/mobile-sticky-cta";
+import { ReadingProgress } from "@/components/reading-progress";
 
 export default function Home() {
   return (
     <>
+      <ReadingProgress />
       <SiteHeader />
       <main className="app-shell-main">
         <Hero />
