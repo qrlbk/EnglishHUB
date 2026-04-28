@@ -25,10 +25,10 @@ function MiniIcon({ kind }: { kind: "check" | "users" | "clock" | "award" }) {
   if (kind === "users")
     return (
       <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden>
-        <path d="M16 11a3 3 0 1 0-3-3" />
-        <path d="M3 20v-1a5 5 0 0 1 5-5" />
-        <path d="M20 20v-1a4 4 0 0 0-3-3.87" />
-        <path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+        <circle cx="9" cy="8" r="2.5" />
+        <circle cx="16" cy="9.5" r="2" />
+        <path d="M4.5 19a4.5 4.5 0 0 1 9 0" />
+        <path d="M13 19a3.5 3.5 0 0 1 7 0" />
       </svg>
     );
   if (kind === "clock")
